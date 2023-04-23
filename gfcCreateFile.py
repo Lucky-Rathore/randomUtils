@@ -6,7 +6,7 @@ if __name__ == '__main__':
         print('****************************')
         x = f.readline()
         print(x)
-        with open('/home/lucky/' + name[i], 'w') as nf:
+        with open('/home/lucky/' + name[i] + '.xml', 'w') as nf:
             nf.write(x)
             nf.close()
         f.close()
