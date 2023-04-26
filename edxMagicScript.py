@@ -46,7 +46,7 @@ def createVertical(displayName, title, questionCount, childIndex):
 def getQuiz(topic):
   headers = {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer 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',
+    'Authorization': 'Bearer changeme',
   }
 
   json_data = {
