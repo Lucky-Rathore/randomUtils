@@ -1,6 +1,11 @@
-version: '2'
+version: '3'
 networks:
   caddy:
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
+  
 services:
 
   mongo:
@@ -25,8 +30,9 @@ services:
         - PARSE_SERVER_MASTER_KEY=yourmasterkey
         - PARSE_SERVER_DATABASE_URI=mongodb://mongo:27017/dev
     command:
-        - --masterKeyIps=172.19.0.2
-    networks:
+        - --masterKeyIps=10.5.0.5
+        - --masterKeyIps=10.5.0.3
+    networks:      
       - caddy
     labels:
       caddy: server.aptley.in
@@ -48,7 +54,8 @@ services:
       - PARSE_SERVER_APPLICATION_ID=yourappid
       - PARSE_SERVER_MASTER_KEY=yourmasterkey
     networks:
-      - caddy
+      caddy:
+        ipv4_address: 10.5.0.5
     labels:
       caddy: dashboard.aptley.in
       caddy.reverse_proxy: "{{upstreams 4040}}"
@@ -67,7 +74,8 @@ services:
       - /home/ubuntu/containers/caddy/caddy_data:/data
       - /home/ubuntu/containers/caddy/caddy_config:/config
     networks:
-      - caddy
+      caddy:
+        ipv4_address: 10.5.0.3
 
 volumes:
   mongodb_data:
@@ -76,3 +84,4 @@ volumes:
     driver: local
   parse_dashboard_data:
     driver: local
+

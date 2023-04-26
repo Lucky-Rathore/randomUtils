@@ -10,9 +10,6 @@ if __name__ == '__main__':
             nf.write(x)
             nf.close()
         f.close()
-
-
-
         print('****************************')
 
 
