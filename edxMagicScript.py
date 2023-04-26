@@ -10,7 +10,7 @@ def createProblemXml(title, jsonData):
       optionXml = []
       for option in question['options']:
         optionXml.append( '<choice correct="false">__option__</choice>'.replace('__option__', option) )
-      i = question['correctAnswerIndex']
+      i = question['correctAnswerIndex'] if question['correctAnswerIndex'] < 4 else 3 #todo: no more index use value
       optionXml[i] = optionXml[i].replace('false', 'true')
       questionXML = '''
       <problem display_name="Multiple Choice">
@@ -37,7 +37,7 @@ def createVertical(displayName, title, questionCount, childIndex):
   <vertical display_name="__displayName__ quiz" parent_url="block-v1:getfreecertificate+PY101+2023_01+type@sequential+block@16aefc41a6384342bff96ee71aced473" index_in_children_list="__childIndex__">
     __question__
   </vertical>'''
-  verticalXml = verticalXml.replace('__displayName__', displayName) 
+  verticalXml = verticalXml.replace('__displayName__', displayName)
   verticalXml = verticalXml.replace('__question__',  '\n'.join(question))
   verticalXml = verticalXml.replace('__childIndex__',   str(childIndex))
   with open( courseDir + '/drafts/vertical/' + title + '.xml', 'w') as f:
@@ -62,40 +62,44 @@ def getQuiz(topic):
     f.write(str(article))
     f.write('\n')
 
-  print('request: ' + topic)
-  print('reponse: ' + article['choices'][0]['text'].strip())
+  # print('request: ' + topic)
+  # print('reponse: ' + article['choices'][0]['text'].strip())
   return article['choices'][0]['text'].strip()
 
 def processQuery(i, title, quiz):
-  quiz = json.loads(  getQuiz(quiz)) 
+  quiz = json.loads(  getQuiz(quiz))
   displayName = title[:]
   title = title.replace('&', 'and').replace('/', '').replace(' ', '').lower()
   createVertical(displayName, title, len(quiz), i)
   createProblemXml(title, quiz)
+  print('Done for ' + title)
 
 a= [
 
-'Introduction to python',
-'Installing Python and PyCharm',
-'Setup and Hello World',
-'Drawing a Shape',
-'Variables and Data Types',
-'Working With Strings',
-'Working With Numbers',
-'Getting Input From Users',
-'Building a Basic Calculator',
-'Mad Libs Game',
-'Lists',
-'List Functions',
-'Tuples',
-'Functions',
-'Return Statement',
-'If Statements',
-'If Statements and Comparisons',
-'Building a better Calculator',
-'Dictionaries',
-'While Loop',
-'Building a Guessing Game',
+# 'Introduction to python',
+# 'Installing Python and PyCharm',
+# 'Setup and Hello World',
+# 'Drawing a Shape',
+# 'Variables and Data Types',
+# 'Working With Strings',
+
+# 'Working With Numbers',
+# 'Getting Input From Users',
+# 'Building a Basic Calculator',
+# 'Mad Libs Game',
+# 'Lists',
+# 'List Functions',
+# 'Tuples',
+# 'Functions',
+# 'Return Statement',
+
+# 'If Statements',
+# 'If Statements and Comparisons',
+# 'Building a better Calculator',
+# 'Dictionaries',
+# 'While Loop',
+# 'Building a Guessing Game',
+
 'For Loops',
 'Exponent Function',
 '2D Lists and Nested Loops',
@@ -117,13 +121,13 @@ magiccc = 'provide 3 multiple choice question with answer as a JSON for "python:
 
 print('total: ', len(a))
 
-for i, q in enumerate(a):
-  try:
-    print('processing: ', q)
-    query = magiccc.replace('__topic__', q)
-    processQuery(i,  q,   query)
-  except Exception as e :
-    print('failed for: ' + q )
-    print(e)
 
-# processQuery(5, 'Variables and Data Types', '')
+if __name__ == '__main__':
+    for i, q in enumerate(a):
+      try:
+        print('processing: ', q)
+        query = magiccc.replace('__topic__', q)
+        processQuery(i, q, query)
+      except Exception as e:
+        print('failed for 2: ', q)
+        print(e)
