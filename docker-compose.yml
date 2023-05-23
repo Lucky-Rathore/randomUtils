@@ -32,11 +32,15 @@ services:
     command:
         - --masterKeyIps=10.5.0.5
         - --masterKeyIps=10.5.0.3
+        - --cloud=/parse-server/cloud/main.js
     networks:      
       - caddy
     labels:
       caddy: server.aptley.in
       caddy.reverse_proxy: "{{upstreams 1337}}"
+    volumes:
+      - /home/ubuntu/cloud-code-vol:/parse-server/cloud
+    
 
   dashboard:
     container_name: parsedashboard
@@ -59,7 +63,6 @@ services:
     labels:
       caddy: dashboard.aptley.in
       caddy.reverse_proxy: "{{upstreams 4040}}"
-  
 
   caddy:
     image: caddy:latest
@@ -69,7 +72,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - /home/ubuntu/containers/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /home/ubuntu/Caddyfile:/etc/caddy/Caddyfile
       - /home/ubuntu/containers/caddy/site:/srv
       - /home/ubuntu/containers/caddy/caddy_data:/data
       - /home/ubuntu/containers/caddy/caddy_config:/config
@@ -84,4 +87,3 @@ volumes:
     driver: local
   parse_dashboard_data:
     driver: local
-
